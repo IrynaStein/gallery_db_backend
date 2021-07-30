@@ -52,9 +52,6 @@ class Application
       )
 
       resp_artwork = {
-        # id: task.id,
-        # text: task.text,
-        # category: task.category.name
         id: artwork.id,
         title: artwork.title,
         edition: artwork.edition,
@@ -76,6 +73,7 @@ class Application
       return [200, { 'Content-type' => 'application/json' }, [{ message: 'Artwork was successfully deleted' }.to_json]]
 
     elsif req.path.match(/collectors/) && req.get?
+      # binding.pry
       collectors = Collector.all.map do |collector|
         {
           id: collector.id,
@@ -87,6 +85,41 @@ class Application
         }
       end
       return [200, {'Content-Type' => 'application/json'} , [{:collectors => collectors, :message => "success"}.to_json]]
+    
+    elsif req.path.match(/collectors/) && req.post?
+      
+    data = JSON.parse(req.body.read)
+    # binding.pry
+    
+    artwork1 = Artwork.find_by(id: data['art_id_1'])
+    # artwork2 = data['art_id_2'] > 0 ? Artwork.find_by_id(id: data['art_id_2']) : NILL
+    
+    collectorN = Collector.create(
+      first_name: data['first_name'],
+      last_name: data['last_name'],
+      email: data['email'],
+      full_address: data['address'],
+      phone_num: data['phone']
+    )
+    collection = Collection.create(
+      artwork: artwork1,
+      collector: collectorN
+    )
+
+    # !artwork2.nil? ? Collection.create(artwork: artwork2, collector: collectorN) : Collection.new(artwork: artwork2, collector: collectorN)
+
+    resp_collector = {
+      id: collectorN.id,
+      first_name: collectorN.first_name,
+      last_name: collectorN.last_name,
+      email: collectorN.email,
+      address: collectorN.full_address,
+      phone: collectorN.phone_num
+    }
+
+    return [200, { 'Content-Type' => 'application/json' }, [{ collector: resp_collector }.to_json]]
+  # elsif req.path.match(/collectors/) 
+  #   binding.pry
     else
       resp.write 'Path not Found, buddy. Try again'
     end
