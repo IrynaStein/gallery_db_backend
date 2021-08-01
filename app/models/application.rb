@@ -6,123 +6,68 @@ class Application
     resp = Rack::Response.new
     req = Rack::Request.new(env)
 
+#ARTWORKS GET
     if req.path.match(/artworks/) && req.get?
-
-      artwork = Artwork.all.map do |artwork|
-        {
-          id: artwork.id,
-          title: artwork.title,
-          edition: artwork.edition,
-          likes: artwork.likes,
-          price: artwork.price,
-          medium: artwork.medium,
-          image: artwork.image,
-          featured: artwork.featured,
-          date_created: artwork.date_created,
-          category: artwork.category
-        }
-      end
-      category = Category.all.map do |category|
-        {
-          id: category.id,
-          name: category.name,
-          popularity: category.popularity
-        }
+      # binding.pry
+      if req.path.split('/artworks/').last == '/artworks'
+        return [200, { 'Content-Type' => 'application/json' },
+                [{ artworks: Artwork.render_artworks,
+                   categories: Category.render_categories, message: 'success' }.to_json]]
+      elsif req.path.split('/artworks/').last.split('/').first == 'showcategories'
+        id = req.path.split('/artworks/').last.split('/').last
+        categories_list = Category.sort_by_popularity
+        return [200, { 'Content-Type' => 'application/json' },
+                [{ cat_popularity: categories_list, message: 'success' }.to_json]]
+      else
+        id = req.path.split('/artworks/').last
+        artwork = Artwork.find_by_path(id).works_by_collector
+        # binding.pry
+        return [200, { 'Content-Type' => 'application/json' },
+                [{ collector_list: artwork,
+                   message: 'success' }.to_json]]
       end
 
-      return [200, { 'Content-Type' => 'application/json' },
-              [{ artworks: artwork, categories: category, message: 'success' }.to_json]]
+#ARTWORKS POST REQUEST
     elsif req.path.match(/artworks/) && req.post?
       # binding.pry
       data = JSON.parse(req.body.read)
+      artwork = Artwork.create_new_with_association(data)
+      return [200, { 'Content-Type' => 'application/json' }, [{ artwork: artwork }.to_json]]
 
-      category = Category.find_by(name: data['category'])
-      artwork = Artwork.create(
-        # text: data["text"],
-        # category: category
-        title: data['title'],
-        edition: data['edition'],
-        likes: data['likes'],
-        price: data['price'],
-        medium: data['medium'],
-        image: data['image'],
-        featured: data['featured'],
-        date_created: data['date_created'],
-        category: category
-      )
-
-      resp_artwork = {
-        id: artwork.id,
-        title: artwork.title,
-        edition: artwork.edition,
-        likes: artwork.likes,
-        price: artwork.price,
-        medium: artwork.medium,
-        image: artwork.image,
-        featured: artwork.featured,
-        date_created: artwork.date_created,
-        category: artwork.category.name
-      }
-
-      return [200, { 'Content-Type' => 'application/json' }, [{ artwork: resp_artwork }.to_json]]
-
+#ARTWORKS DELETE
     elsif req.path.match(/artworks/) && req.delete?
-      # binding.pry
-      id = req.path.split('/artworks/').last
-      Artwork.find_by_id(id).delete
-      return [200, { 'Content-type' => 'application/json' }, [{ message: 'Artwork was successfully deleted' }.to_json]]
+      Artwork.find_by_path(req.path).destroy
+      return [200, { 'Content-type' => 'application/json' },
+              [{ message: 'Artwork was successfully deleted' }.to_json]]
 
+#COLLECTORS GET
     elsif req.path.match(/collectors/) && req.get?
       # binding.pry
-      collectors = Collector.all.map do |collector|
-        {
-          id: collector.id,
-          first_name: collector.first_name,
-          last_name: collector.last_name,
-          email: collector.email,
-          address: collector.full_address,
-          phone: collector.phone_num
-        }
-      end
-      return [200, {'Content-Type' => 'application/json'} , [{:collectors => collectors, :message => "success"}.to_json]]
-    
-    elsif req.path.match(/collectors/) && req.post?
+      if req.path.split('/collectors/') == "/collectors"
+      return [200, { 'Content-Type' => 'application/json' },
+              [{ collectors: Collector.render_collectors, message: 'success' }.to_json]]
+      else 
+        id = req.path.split('/collectors/').last
       
-    data = JSON.parse(req.body.read)
-    # binding.pry
-    
-    artwork1 = Artwork.find_by(id: data['art_id_1'])
-    # artwork2 = data['art_id_2'] > 0 ? Artwork.find_by_id(id: data['art_id_2']) : NILL
-    
-    collectorN = Collector.create(
-      first_name: data['first_name'],
-      last_name: data['last_name'],
-      email: data['email'],
-      full_address: data['address'],
-      phone_num: data['phone']
-    )
-    collection = Collection.create(
-      artwork: artwork1,
-      collector: collectorN
-    )
+        return [200, { 'Content-Type' => 'application/json' }, [{ artworks: Collector.find_by_id(id).artworks, message: 'success' }.to_json]] 
+      end
+#COLLECTORS POST
+    elsif req.path.match(/collectors/) && req.post?
+      data = JSON.parse(req.body.read)
+      # binding.pry
+      collector = Collector.create_new_with_association(data)
+      return [200, { 'Content-Type' => 'application/json' }, [{ collector: collector }.to_json]]
 
-    # !artwork2.nil? ? Collection.create(artwork: artwork2, collector: collectorN) : Collection.new(artwork: artwork2, collector: collectorN)
+#COLLECTORS DELETE
+    elsif req.path.match(/collectors/) && req.delete?
+      Collector.find_by_path(req.path).destroy
+      return [200, { 'Content-Type' => 'application/json' }, [{ message: 'Collector was succesfully deleted' }.to_json]]
 
-    resp_collector = {
-      id: collectorN.id,
-      first_name: collectorN.first_name,
-      last_name: collectorN.last_name,
-      email: collectorN.email,
-      address: collectorN.full_address,
-      phone: collectorN.phone_num
-    }
-
-    return [200, { 'Content-Type' => 'application/json' }, [{ collector: resp_collector }.to_json]]
-  # elsif req.path.match(/collectors/) 
-  #   binding.pry
+#PATH NOT FOUND RESPONSE
     else
       resp.write 'Path not Found, buddy. Try again'
     end
+
     resp.finish
   end
 end
