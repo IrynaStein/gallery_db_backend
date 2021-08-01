@@ -3,7 +3,7 @@ class Collector < ActiveRecord::Base
   has_many :artworks, through: :collections
 
   def self.render_collectors
-    self.all.map do |collector|
+    all.map do |collector|
       {
         id: collector.id,
         first_name: collector.first_name,
@@ -16,8 +16,8 @@ class Collector < ActiveRecord::Base
   end
 
   def self.find_by_path(path)
-    id = path.split("/collectors/").last
-    self.find_by_id(id)
+    id = path.split('/collectors/').last
+    find_by_id(id)
   end
 
   def self.create_new_with_association(data)
@@ -54,4 +54,11 @@ class Collector < ActiveRecord::Base
     }
   end
 
+  def self.find_works_with_categories(id)
+    Collector.find_by_id(id).artworks.map do |work|
+      { id: work[:id], title: work[:title],
+        category: Category.find_by_id(work[:category_id]).name }
+    end
+  end
+  
 end

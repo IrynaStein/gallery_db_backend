@@ -43,13 +43,13 @@ class Application
 #COLLECTORS GET
     elsif req.path.match(/collectors/) && req.get?
       # binding.pry
-      if req.path.split('/collectors/') == "/collectors"
+      if req.path.split('/collectors/').last == "/collectors"
       return [200, { 'Content-Type' => 'application/json' },
               [{ collectors: Collector.render_collectors, message: 'success' }.to_json]]
       else 
         id = req.path.split('/collectors/').last
-      
-        return [200, { 'Content-Type' => 'application/json' }, [{ artworks: Collector.find_by_id(id).artworks, message: 'success' }.to_json]] 
+       
+        return [200, { 'Content-Type' => 'application/json' }, [{ artworks: Collector.find_works_with_categories(id), message: 'success' }.to_json]] 
       end
 #COLLECTORS POST
     elsif req.path.match(/collectors/) && req.post?
