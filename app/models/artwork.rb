@@ -26,7 +26,8 @@ class Artwork < ActiveRecord::Base
   end
 
   def works_by_collector
-    self.collectors.map {|collector| {:name => collector.first_name + " " + collector.last_name, :id => collector.id, :collection => collector.artworks}}
+    self.collectors.map {|collector| {:name => collector.first_name + " " + collector.last_name, 
+        :id => collector.id, :collection => collector.artworks}}
   end 
 
 

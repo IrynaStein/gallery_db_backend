@@ -23,8 +23,10 @@ class Collector < ActiveRecord::Base
   def self.create_new_with_association(data)
     artwork1 = Artwork.find_by(id: data['art_id_1'])
     artwork2 = Artwork.find_by(id: data['art_id_2'])
-    # artwork2 = data['art_id_2'] > 0 ? Artwork.find_by_id(id: data['art_id_2']) : NILL
-
+   
+#save the artwork_ids to an array "a"
+    #remove empty strings from the received array of artist_ids
+#Collector.artwork_ids= a
     collectorN = Collector.create(
       first_name: data['first_name'],
       last_name: data['last_name'],
@@ -60,5 +62,5 @@ class Collector < ActiveRecord::Base
         category: Category.find_by_id(work[:category_id]).name }
     end
   end
-  
+
 end

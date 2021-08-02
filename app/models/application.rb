@@ -13,8 +13,9 @@ class Application
         return [200, { 'Content-Type' => 'application/json' },
                 [{ artworks: Artwork.render_artworks,
                    categories: Category.render_categories, message: 'success' }.to_json]]
-      elsif req.path.split('/artworks/').last.split('/').first == 'showcategories'
-        id = req.path.split('/artworks/').last.split('/').last
+#change line 17 to fit RESTFUL convention for route naming     
+      elsif req.path.split('/').last == 'showcategories'
+        id = req.path.split('/')[2].to_i
         categories_list = Category.sort_by_popularity
         return [200, { 'Content-Type' => 'application/json' },
                 [{ cat_popularity: categories_list, message: 'success' }.to_json]]
@@ -56,6 +57,7 @@ class Application
       data = JSON.parse(req.body.read)
       # binding.pry
       collector = Collector.create_new_with_association(data)
+      #Collector.create(name: Laura, artwork_ids: [1,2,3])
       return [200, { 'Content-Type' => 'application/json' }, [{ collector: collector }.to_json]]
 
 #COLLECTORS DELETE
