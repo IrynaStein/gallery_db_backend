@@ -21,36 +21,30 @@ class Collector < ActiveRecord::Base
   end
 
   def self.create_new_with_association(data)
-    artwork1 = Artwork.find_by(id: data['art_id_1'])
-    artwork2 = Artwork.find_by(id: data['art_id_2'])
-    # artwork2 = data['art_id_2'] > 0 ? Artwork.find_by_id(id: data['art_id_2']) : NILL
-
-    collectorN = Collector.create(
+    a = data['art_id']
+        .reject { |art| art.empty? }
+        .map { |art| Artwork.find_by_title(art) }
+        .map { |c| c.id }
+    # save the artwork_ids to an array "a"
+    # remove empty strings from the received array of artist_ids
+    # Collector.artwork_ids= a
+    # Collector.create(name: Laura, artwork_ids: [1,2,3])
+    cNew = Collector.create(
       first_name: data['first_name'],
       last_name: data['last_name'],
       email: data['email'],
       full_address: data['address'],
-      phone_num: data['phone']
+      phone_num: data['phone'],
+      artwork_ids: a
     )
-    collection = Collection.create(
-      artwork: artwork1,
-      collector: collectorN
-    )
-
-    collection2 = Collection.create(
-      artwork: artwork2,
-      collector: collectorN
-    )
-
-    # !artwork2.nil? ? Collection.create(artwork: artwork2, collector: collectorN) : Collection.new(artwork: artwork2, collector: collectorN)
 
     resp_collector = {
-      id: collectorN.id,
-      first_name: collectorN.first_name,
-      last_name: collectorN.last_name,
-      email: collectorN.email,
-      address: collectorN.full_address,
-      phone: collectorN.phone_num
+      id: cNew.id,
+      first_name: cNew.first_name,
+      last_name: cNew.last_name,
+      email: cNew.email,
+      address: cNew.full_address,
+      phone: cNew.phone_num
     }
   end
 
@@ -60,5 +54,4 @@ class Collector < ActiveRecord::Base
         category: Category.find_by_id(work[:category_id]).name }
     end
   end
-  
 end

@@ -38,7 +38,7 @@ art2 = Artwork.create(
     category: cat3
 )
 
-art2 = Artwork.create(
+art3 = Artwork.create(
     title: "Mario",
     edition: 25,
     likes: 17,

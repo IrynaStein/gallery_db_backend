@@ -12,9 +12,9 @@ class Application
       if req.path.split('/artworks/').last == '/artworks'
         return [200, { 'Content-Type' => 'application/json' },
                 [{ artworks: Artwork.render_artworks,
-                   categories: Category.render_categories, message: 'success' }.to_json]]
-      elsif req.path.split('/artworks/').last.split('/').first == 'showcategories'
-        id = req.path.split('/artworks/').last.split('/').last
+                   categories: Category.render_categories, message: 'success' }.to_json]]    
+      elsif req.path.split('/').last == 'showcategories'
+        id = req.path.split('/')[2].to_i
         categories_list = Category.sort_by_popularity
         return [200, { 'Content-Type' => 'application/json' },
                 [{ cat_popularity: categories_list, message: 'success' }.to_json]]
