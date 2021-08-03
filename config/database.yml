@@ -1,5 +1,26 @@
-development:
-  adapter: sqlite3
-  database: db/development.sqlite3
+# development:
+#   adapter: sqlite3
+#   database: db/development.sqlite3
+#   pool: 5
+#   timeout: 5000
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  # For details on connection pooling, see Rails configuration guide
+  # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: 5
-  timeout: 5000
+
+development:
+  <<: *default
+  database: limbism_dev
+
+test:
+  <<: *default
+  database: limbism_test
+
+production:
+  <<: *default
+  database: limbism
+  # username: myapp
+  # password: <%= ENV['MYAPP_DATABASE_PASSWORD'] %>

@@ -54,9 +54,8 @@ class Application
 #COLLECTORS POST
     elsif req.path.match(/collectors/) && req.post?
       data = JSON.parse(req.body.read)
-      binding.pry
+      # binding.pry
       collector = Collector.create_new_with_association(data)
-      #Collector.create(name: Laura, artwork_ids: [1,2,3])
       return [200, { 'Content-Type' => 'application/json' }, [{ collector: collector }.to_json]]
 
 #COLLECTORS DELETE
