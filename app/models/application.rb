@@ -12,8 +12,7 @@ class Application
       if req.path.split('/artworks/').last == '/artworks'
         return [200, { 'Content-Type' => 'application/json' },
                 [{ artworks: Artwork.render_artworks,
-                   categories: Category.render_categories, message: 'success' }.to_json]]
-#change line 17 to fit RESTFUL convention for route naming     
+                   categories: Category.render_categories, message: 'success' }.to_json]]    
       elsif req.path.split('/').last == 'showcategories'
         id = req.path.split('/')[2].to_i
         categories_list = Category.sort_by_popularity
@@ -55,7 +54,7 @@ class Application
 #COLLECTORS POST
     elsif req.path.match(/collectors/) && req.post?
       data = JSON.parse(req.body.read)
-      # binding.pry
+      binding.pry
       collector = Collector.create_new_with_association(data)
       #Collector.create(name: Laura, artwork_ids: [1,2,3])
       return [200, { 'Content-Type' => 'application/json' }, [{ collector: collector }.to_json]]
