@@ -39,7 +39,7 @@ class Collector < ActiveRecord::Base
     )
 
     resp_collector = {
-    #   id: cNew.id,
+      id: cNew.id,
       first_name: cNew.first_name,
       last_name: cNew.last_name,
       email: cNew.email,
