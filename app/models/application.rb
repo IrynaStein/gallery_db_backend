@@ -34,13 +34,13 @@ class Application
       artwork = Artwork.create_new_with_association(data)
       return [200, { 'Content-Type' => 'application/json' }, [{ artwork: artwork }.to_json]]
 #ARTWORKS PATCH
-    # elsif req.path.match(/artworks/) && req.patch?
-    # # binding.pry
-    # likesData = JSON.parse(req.body.read)
-    # id = req.path.split('/artworks/').last
-    # artwork = Artwork.find_by_path(id).update_likes(likesData)
-    #   return [200, { 'Content-Type' => 'application/json' },
-    #     [{ artwork: artwork, message: 'Likes updated' }.to_json]]
+    elsif req.path.match(/artworks/) && req.patch?
+    # binding.pry
+    likesData = JSON.parse(req.body.read)
+    id = req.path.split('/artworks/').last
+    artwork = Artwork.find_by_path(id).update_likes(likesData)
+      return [200, { 'Content-Type' => 'application/json' },
+        [{ artwork: artwork, message: 'Likes updated' }.to_json]]
         
 #ARTWORKS DELETE
     elsif req.path.match(/artworks/) && req.delete?
