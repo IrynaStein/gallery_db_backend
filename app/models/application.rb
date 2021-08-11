@@ -35,7 +35,7 @@ class Application
       return [200, { 'Content-Type' => 'application/json' }, [{ artwork: artwork }.to_json]]
 #ARTWORKS PATCH
     elsif req.path.match(/artworks/) && req.patch?
-    binding.pry
+    # binding.pry
     likesData = JSON.parse(req.body.read)
     id = req.path.split('/artworks/').last
     artwork = Artwork.find_by_path(id).update_likes(likesData)
