@@ -59,4 +59,22 @@ class Artwork < ActiveRecord::Base
         category: artwork.category.name
       }
   end
+
+  def update_likes(data)
+    self.update(:likes => data["likes"])
+
+    artwork = {
+      id: self.id,
+      title: self.title,
+      edition: self.edition,
+      likes: self.likes,
+      price: self.price,
+      medium: self.medium,
+      image: self.image,
+      featured: self.featured,
+      date_created: self.date_created,
+      category: self.category.name
+    }
+  end
+
 end

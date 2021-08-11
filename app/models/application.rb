@@ -33,11 +33,19 @@ class Application
       data = JSON.parse(req.body.read)
       artwork = Artwork.create_new_with_association(data)
       return [200, { 'Content-Type' => 'application/json' }, [{ artwork: artwork }.to_json]]
-
+#ARTWORKS PATCH
+    elsif req.path.match(/artworks/) && req.patch?
+    binding.pry
+    likesData = JSON.parse(req.body.read)
+    id = req.path.split('/artworks/').last
+    artwork = Artwork.find_by_path(id).update_likes(likesData)
+      return [200, { 'Content-Type' => 'application/json' },
+        [{ artwork: artwork, message: 'Likes updated' }.to_json]]
+        
 #ARTWORKS DELETE
     elsif req.path.match(/artworks/) && req.delete?
       Artwork.find_by_path(req.path).destroy
-      return [200, { 'Content-type' => 'application/json' },
+      return [200, { 'Content-Type' => 'application/json' },
               [{ message: 'Artwork was successfully deleted' }.to_json]]
 
 #COLLECTORS GET

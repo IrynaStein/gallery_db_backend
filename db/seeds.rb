@@ -66,3 +66,5 @@ end
 puts "Seeding collections...."
 
 Collection.create(artwork: art1, collector_id: rand(1..3))
+
+puts "Done!"
