@@ -39,16 +39,16 @@ class Application
       # binding.pry
       if req.path.split('/').last == 'update'
         data = JSON.parse(req.body.read)
-        id = req.path.split('/')[2].to_i
-        artwork = Artwork.find_by_path(id).update_artwork(data)
+        id1 = req.path.split('/')[2].to_i
+        artwork1 = Artwork.find_by_path(id1).update_artwork(data)
         return [200, { 'Content-Type' => 'application/json' },
-          [{ artwork: artwork, message: 'Artwork updated' }.to_json]]
+          [{ artwork: artwork1, message: 'Artwork updated' }.to_json]]
       else
         likesData = JSON.parse(req.body.read)
-        id = req.path.split('/artworks/').last
-        artwork = Artwork.find_by_path(id).update_likes(likesData)
+        id2 = req.path.split('/artworks/').last
+        artwork2 = Artwork.find_by_path(id2).update_likes(likesData)
       return [200, { 'Content-Type' => 'application/json' },
-              [{ artwork: artwork, message: 'Likes updated' }.to_json]]
+              [{ artwork: artwork2, message: 'Likes updated' }.to_json]]
       end
     # ARTWORKS DELETE
     elsif req.path.match(/artworks/) && req.delete?
