@@ -14,13 +14,13 @@ class Application
                 [{ artworks: Artwork.render_artworks,
                    categories: Category.render_categories, message: 'success' }.to_json]]
       elsif req.path.split('/').last == 'showcategories'
-        id = req.path.split('/')[2].to_i
+        # id = req.path.split('/')[2].to_i
         categories_list = Category.sort_by_popularity
         return [200, { 'Content-Type' => 'application/json' },
                 [{ cat_popularity: categories_list, message: 'success' }.to_json]]
       else
-        id = req.path.split('/artworks/').last
-        artwork = Artwork.find_by_path(id).works_by_collector
+        # id = req.path.split('/artworks/').last
+        artwork = Artwork.find_by_path(req.path).works_by_collector
         # binding.pry
         return [200, { 'Content-Type' => 'application/json' },
                 [{ collector_list: artwork,
