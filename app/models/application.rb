@@ -39,14 +39,14 @@ class Application
       # binding.pry
       if req.path.split('/').last == 'update'
         data = JSON.parse(req.body.read)
-        id1 = req.path.split('/')[2].to_i
-        artwork1 = Artwork.find(id1).update_artwork(data)
+        id = req.path.split('/')[2].to_i
+        artwork1 = Artwork.find(id).update_artwork(data)
         return [200, { 'Content-Type' => 'application/json' },
           [{ artwork: artwork1, message: 'Artwork updated' }.to_json]]
       else
         likesData = JSON.parse(req.body.read)
-        id2 = req.path.split('/artworks/').last
-        artwork2 = Artwork.find_by_path(id2).update_likes(likesData)
+        # id2 = req.path.split('/artworks/').last
+        artwork2 = Artwork.find_by_path(req.path).update_likes(likesData)
       return [200, { 'Content-Type' => 'application/json' },
               [{ artwork: artwork2, message: 'Likes updated' }.to_json]]
       end
