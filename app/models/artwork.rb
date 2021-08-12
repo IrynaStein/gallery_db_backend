@@ -64,23 +64,23 @@ class Artwork < ActiveRecord::Base
     self.update(:likes => data["likes"])
 
     artwork = {
-      id: self.id,
-      title: self.title,
-      edition: self.edition,
-      likes: self.likes,
-      price: self.price,
-      medium: self.medium,
-      image: self.image,
-      featured: self.featured,
-      date_created: self.date_created,
-      category: self.category.name
+        id: self.id,
+        title: self.title,
+        edition: self.edition,
+        likes: self.likes,
+        price: self.price,
+        medium: self.medium,
+        image: self.image,
+        featured: self.featured,
+        date_created: self.date_created,
+        category: self.category.name
     }
   end
 
   def update_artwork(data)
     category = Category.find_by(name: data['category'])
     self.update(
-      title: data['title'],
+        title: data['title'],
         edition: data['edition'],
         likes: data['likes'],
         price: data['price'],
@@ -90,17 +90,17 @@ class Artwork < ActiveRecord::Base
         date_created: data['date_created'],
         category: category
     )
-    artwork = {
-      id: self.id,
-      title: self.title,
-      edition: self.edition,
-      likes: self.likes,
-      price: self.price,
-      medium: self.medium,
-      image: self.image,
-      featured: self.featured,
-      date_created: self.date_created,
-      category: self.category.name
+    artwork1 = {
+        id: self.id,
+        title: self.title,
+        edition: self.edition,
+        likes: self.likes,
+        price: self.price,
+        medium: self.medium,
+        image: self.image,
+        featured: self.featured,
+        date_created: self.date_created,
+        category: self.category.name
     }
   end
 

@@ -40,7 +40,7 @@ class Application
       if req.path.split('/').last == 'update'
         data = JSON.parse(req.body.read)
         id1 = req.path.split('/')[2].to_i
-        artwork1 = Artwork.find_by_path(id1).update_artwork(data)
+        artwork1 = Artwork.find(id1).update_artwork(data)
         return [200, { 'Content-Type' => 'application/json' },
           [{ artwork: artwork1, message: 'Artwork updated' }.to_json]]
       else
@@ -50,6 +50,7 @@ class Application
       return [200, { 'Content-Type' => 'application/json' },
               [{ artwork: artwork2, message: 'Likes updated' }.to_json]]
       end
+
     # ARTWORKS DELETE
     elsif req.path.match(/artworks/) && req.delete?
       Artwork.find_by_path(req.path).destroy
